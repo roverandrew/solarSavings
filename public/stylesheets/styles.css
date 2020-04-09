@@ -1,0 +1,15 @@
+h1{
+    text-align: center;
+}
+
+
+.row{
+    margin-bottom: 1em;
+}
+
+#subscript{
+    font-size: xx-small;
+    margin-top: 15px;
+    float: right;
+    margin-left:1px;
+}
