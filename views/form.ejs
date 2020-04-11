@@ -1,0 +1,47 @@
+<%- include("partials/header"); -%>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <i class="fas fa-solar-panel fa-1x" href="#"></i>
+        <span>Solar Savings</span><div id="subscript">(are solar tiles worth it?)</div>
+    </a>
+</nav>
+
+<div class="container">
+
+    <h1 class="my-1">Time-Cost Analysis Calculator</h1>
+
+    <form action="/data" method="POST">
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label class="my-1" for="standardRoofCostPerUnit">Select a traditional roof type</label>
+                    <select class="form-control" id="standardRoofCostPerUnit">
+                        <option value="59.22">Clay Tile (cheapest)</option>
+                        <option value="74.11">Asphalt (standard)</option>
+                        <option value="166.67">Slate (expensive)</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label class="my-1" for="roofArea">Enter the area of the roof your house in m<sup>2</sup></label>
+                    <input type="text" class="form-control" id="roofArea" placeholder="400 square meters for an average sized house.">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label class="my-1" for="percentageCovered">Enter the percentage of your roof to be covered by solar shingles</label>
+                    <div class="range-wrap">
+                        <div class="range-value" id="rangeV"></div>
+                        <input id="percentageCovered" type="range" min="1" max="100" value="50" step="1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+
+<script type="text/javascript" src="/javascripts/slider.js"></script>
+</body>
+</html>
