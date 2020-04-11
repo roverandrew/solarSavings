@@ -33,7 +33,7 @@ router.get("/data", function(req,res){
         const totalArea = 2000;
         const system_capacity = 0.005*totalArea;
         const module_type = 1;
-        const losses = 80.6;
+        const losses = 21.6; //Can make this depend on weather
         const array_type = 1;
         const tilt = 35;
         const azimuth = 0;
