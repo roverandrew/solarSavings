@@ -13,3 +13,7 @@ h1{
     float: right;
     margin-left:1px;
 }
+
+#ex1Slider .slider-selection {
+	background: #BABABA;
+}
