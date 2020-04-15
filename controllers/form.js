@@ -1,8 +1,7 @@
-const getTotalRoofCostData = require("./getTotalRoofCostData"),
-const express              = require("express"),
-const fetch                = require('node-fetch'),
-const app                  = express(),
-const router               = express.Router()
+const Roof = require("./roof");
+var express                = require("express");
+const fetch                = require('node-fetch');
+const router               = express.Router();
 
 /**
  * All prices in Canadian dollars and units in metric.
@@ -20,8 +19,12 @@ var currentProvince;
 
 
 router.post("/data", function(req,res){
+
     standardRoofCostPerUnit = Number(req.body.standardRoofCostPerUnit);
-    roofArea                = Number(req.body.roofArea);
+    var houseLength = Number(req.body.houseLength);
+    var houseWidth = Number(req.body.houseWidth);
+   
+    roofArea = Roof.getRoofArea(houseLength,houseWidth);
     fetch('https://api.getgeoapi.com/api/v2/ip/check?api_key=6a4dd82597fcfab0321c961633972c01020023e2')
     .then(res => res.json())
     .then(json => {
@@ -34,12 +37,11 @@ router.post("/data", function(req,res){
     .then(coordinates =>{
         const lon = coordinates[0];
         const lat  = coordinates[1];
-        const totalArea = 2000;
-        const system_capacity = 0.005*totalArea;
+        const system_capacity = 0.005*roofArea;
         const module_type = 1;
         const losses = 21.6; //Can make this depend on weather
         const array_type = 1;
-        const tilt = 35;
+        const tilt = 27; //Assumed value
         const azimuth = 0;
         const NREL_api_key = 'nANSd1IKE1BAzkWI5BwrefIJDaTXhuEJd4O89gQv';
         return fetch(`https://developer.nrel.gov/api/pvwatts/v6.json?api_key=${NREL_api_key}&lat=${lat}&lon=${lon}&system_capacity=${system_capacity}&azimuth=${azimuth}&tilt=${tilt}&array_type=${array_type}&module_type=${module_type}&losses=${losses}`);
@@ -47,9 +49,10 @@ router.post("/data", function(req,res){
     .then(res => res.json())
     .then(powerData => {
         const annualPowerOutput = powerData.outputs.ac_annual;
-    
+        console.log(annualPowerOutput);
         var costData = getTotalRoofCostData(standardRoofCost,teslaRoofInitialCost,annualPowerOutput, provincialElectricityCostPerkWh, currentProvince);
-
+        res.send(costData);
+        console.log(costData);
         res.render("data",{data:costData});
     })
 

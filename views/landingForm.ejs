@@ -13,17 +13,21 @@
     <form action="/data" method="POST">
         <div class="form-group">
             <div class="row">
-                <div class="col">
+                <div class="col-6">
                     <label class="my-1" for="standardRoofCostPerUnit">Select a traditional roof type</label>
-                    <select class="form-control" id="standardRoofCostPerUnit">
+                    <select class="form-control" name="standardRoofCostPerUnit" id="standardRoofCostPerUnit">
                         <option value="59.22">Clay Tile (cheapest)</option>
                         <option value="74.11">Asphalt (standard)</option>
                         <option value="166.67">Slate (expensive)</option>
                     </select>
                 </div>
-                <div class="col">
-                    <label class="my-1" for="roofArea">Enter the area of the roof your house in m<sup>2</sup></label>
-                    <input type="text" class="form-control" id="roofArea" placeholder="400 square meters for an average sized house.">
+                <div class="col-3">
+                    <label class="my-1" for="houseLength">Enter house length in meters</label>
+                    <input type="text" class="form-control" name="houseLength" id="houseLength" placeholder="length">
+                </div>
+                <div class="col-3">
+                    <label class="my-1" for="houseWidth">Enter house width in meters</label>
+                    <input type="text" class="form-control" name="houseWidth" id="houseWidth" placeholder="width">
                 </div>
             </div>
 
@@ -32,7 +36,7 @@
                     <label class="my-1" for="percentageCovered">Enter the percentage of your roof to be covered by solar shingles</label>
                     <div class="range-wrap">
                         <div class="range-value" id="rangeV"></div>
-                        <input id="percentageCovered" type="range" min="1" max="100" value="50" step="1">
+                        <input name="percentageCovered" id="percentageCovered" type="range" min="1" max="100" value="50" step="1">
                     </div>
                 </div>
             </div>
