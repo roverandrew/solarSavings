@@ -9,13 +9,14 @@ const router               = express.Router();
  * teslaRoofCostPerUnit: Cost in canadian dollars per m^2 of tesla solar shingles. //Source: https://www.tesla.com/en_CA/blog/solar-roof;
  */
 
-const provincialElectricityCostPerkWh = {"AB":0.167,"BC":0.124,"MB":0.096,"NB":0.127,"NL":0.138,"NS":0.150,"NT":0.387,"NU":0.375,"ON":0.125,"PE":0.168,"QC":0.073,"SK":0.182};
 const teslaRoofCostPerUnit = 335;
 var standardRoofCostPerUnit;
 var roofArea;
-var teslaRoofInitialCost;
+var solarPortionRoofCost;
+var standardPortionRoofCost;
 var standardRoofCost;
 var currentProvince;
+var percentageSolar;
 
 
 router.post("/data", function(req,res){
@@ -23,10 +24,14 @@ router.post("/data", function(req,res){
     standardRoofCostPerUnit = Number(req.body.standardRoofCostPerUnit);
     var houseLength = Number(req.body.houseLength);
     var houseWidth = Number(req.body.houseWidth);
+    percentageSolar = (Number(req.body.percentageSolar))/100;
     
     roofArea = Roof.getRoofArea(houseLength,houseWidth);
-    teslaRoofCost = roofArea*teslaRoofCostPerUnit;
     standardRoofCost = roofArea*standardRoofCostPerUnit;
+
+    //New Calculations for portions.
+    solarPortionRoofCost = percentageSolar*roofArea*teslaRoofCostPerUnit;
+    standardPortionRoofCost = (1-percentageSolar)*roofArea*standardRoofCostPerUnit;
 
     fetch('https://api.getgeoapi.com/api/v2/ip/check?api_key=6a4dd82597fcfab0321c961633972c01020023e2')
     .then(res => res.json())
@@ -40,7 +45,7 @@ router.post("/data", function(req,res){
     .then(coordinates =>{
         const lon = coordinates[0];
         const lat  = coordinates[1];
-        const system_capacity = 0.0538105*roofArea; //Capacity in kW/m^2 Source: https://www.theverge.com/2019/10/25/20932831/tesla-new-solar-glass-roof-elon-musk-version-three/
+        const system_capacity = 0.0538105*percentageSolar*roofArea; //Capacity in kW/m^2 Source: https://www.theverge.com/2019/10/25/20932831/tesla-new-solar-glass-roof-elon-musk-version-three/
         const module_type = 1;
         const losses = 21.6; //Can make this depend on weather
         const array_type = 1;
@@ -52,9 +57,9 @@ router.post("/data", function(req,res){
     .then(res => res.json())
     .then(powerData => {
         const annualPowerOutput = powerData.outputs.ac_annual;
-        console.log(teslaRoofCost);
+        const costData = Roof.getTotalRoofCostData(standardRoofCost,solarPortionRoofCost,standardPortionRoofCost,annualPowerOutput,currentProvince);
+        console.log(costData);
         process.exit(1);
-        const costData = Roof.getTotalRoofCostData(standardRoofCost,teslaRoofCost,annualPowerOutput,provincialElectricityCostPerkWh,currentProvince);
         console.log("Cost Data:")
         console.log(costData);
         res.render("displayData",{data:costData});

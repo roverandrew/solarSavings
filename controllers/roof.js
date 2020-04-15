@@ -1,21 +1,23 @@
-const getTotalRoofCostData = function getTotalRoofCostData(standardRoofCost, teslaRoofInitialCost, annualPowerOutput, provincialElectricityCostPerkWh, currentProvince){ 
-    var teslaRoofAnnualSavings = annualPowerOutput * provincialElectricityCostPerkWh.currentProvince;
-    console.log(teslaRoofAnnualSavings);
-    process.exit(0);
+const provincialElectricityCostPerkWh = {"AB":0.167,"BC":0.124,"MB":0.096,"NB":0.127,"NL":0.138,"NS":0.150,"NT":0.387,"NU":0.375,"ON":0.125,"PE":0.168,"QC":0.073,"SK":0.182};
+
+const getTotalRoofCostData = function getTotalRoofCostData(standardRoofCost, solarPortionRoofCost, standardPortionRoofCost, annualPowerOutput,currentProvince){ 
+
+    var teslaRoofAnnualSavings = annualPowerOutput*(provincialElectricityCostPerkWh.currentProvince);
+    var totalCombinedRoofCost = solarPortionRoofCost + standardPortionRoofCost;
     
     var teslaRoofTotalCost = new Array(25);
-    teslaRoofTotalCost.forEach(year =>{
-        teslaRoofCost = teslaRoofCost - teslaRoofAnnualSavings;
-        year = teslaRoofCost;
-    });
-
+    teslaRoofTotalCost[0] = totalCombinedRoofCost;
+    for(var i=1;i<=teslaRoofTotalCost.length;i++){
+        totalCombinedRoofCost = totalCombinedRoofCost - teslaRoofAnnualSavings;
+        teslaRoofTotalCost[i] = totalCombinedRoofCost;
+    }
     var standardRoofTotalCost = new Array(25);
-    standardRoofTotalCost.forEach(year =>{
-        year = standardRoofCost;
-    });
-
+    for(var i=1;i<=standardRoofTotalCost.length;i++){
+        standardRoofTotalCost[i] = standardRoofCost;
+    }
+    
     var data = {standard:standardRoofTotalCost,tesla:teslaRoofTotalCost};
-    return data;
+    return data; //All data points are for the start of the year
 }
 
 const getRoofArea = function getRoofArea(length, width){
