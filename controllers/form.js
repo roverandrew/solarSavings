@@ -13,8 +13,8 @@ const provincialElectricityCostPerkWh = {"AB":0.167,"BC":0.124,"MB":0.096,"NB":0
 const teslaRoofCostPerUnit = 335;
 var standardRoofCostPerUnit;
 var roofArea;
-var teslaRoofInitialCost = roofArea*teslaRoofCostPerUnit;
-var standardRoofCost = roofArea*standardRoofCostPerUnit;
+var teslaRoofInitialCost;
+var standardRoofCost;
 var currentProvince;
 
 
@@ -23,8 +23,11 @@ router.post("/data", function(req,res){
     standardRoofCostPerUnit = Number(req.body.standardRoofCostPerUnit);
     var houseLength = Number(req.body.houseLength);
     var houseWidth = Number(req.body.houseWidth);
-   
+    
     roofArea = Roof.getRoofArea(houseLength,houseWidth);
+    teslaRoofCost = roofArea*teslaRoofCostPerUnit;
+    standardRoofCost = roofArea*standardRoofCostPerUnit;
+
     fetch('https://api.getgeoapi.com/api/v2/ip/check?api_key=6a4dd82597fcfab0321c961633972c01020023e2')
     .then(res => res.json())
     .then(json => {
@@ -37,7 +40,7 @@ router.post("/data", function(req,res){
     .then(coordinates =>{
         const lon = coordinates[0];
         const lat  = coordinates[1];
-        const system_capacity = 0.005*roofArea;
+        const system_capacity = 0.0538105*roofArea; //Capacity in kW/m^2 Source: https://www.theverge.com/2019/10/25/20932831/tesla-new-solar-glass-roof-elon-musk-version-three/
         const module_type = 1;
         const losses = 21.6; //Can make this depend on weather
         const array_type = 1;
@@ -49,11 +52,12 @@ router.post("/data", function(req,res){
     .then(res => res.json())
     .then(powerData => {
         const annualPowerOutput = powerData.outputs.ac_annual;
-        console.log(annualPowerOutput);
-        var costData = getTotalRoofCostData(standardRoofCost,teslaRoofInitialCost,annualPowerOutput, provincialElectricityCostPerkWh, currentProvince);
-        res.send(costData);
+        console.log(teslaRoofCost);
+        process.exit(1);
+        const costData = Roof.getTotalRoofCostData(standardRoofCost,teslaRoofCost,annualPowerOutput,provincialElectricityCostPerkWh,currentProvince);
+        console.log("Cost Data:")
         console.log(costData);
-        res.render("data",{data:costData});
+        res.render("displayData",{data:costData});
     })
 
 });

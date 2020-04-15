@@ -1,6 +1,8 @@
 const getTotalRoofCostData = function getTotalRoofCostData(standardRoofCost, teslaRoofInitialCost, annualPowerOutput, provincialElectricityCostPerkWh, currentProvince){ 
     var teslaRoofAnnualSavings = annualPowerOutput * provincialElectricityCostPerkWh.currentProvince;
-
+    console.log(teslaRoofAnnualSavings);
+    process.exit(0);
+    
     var teslaRoofTotalCost = new Array(25);
     teslaRoofTotalCost.forEach(year =>{
         teslaRoofCost = teslaRoofCost - teslaRoofAnnualSavings;
@@ -15,7 +17,6 @@ const getTotalRoofCostData = function getTotalRoofCostData(standardRoofCost, tes
     var data = {standard:standardRoofTotalCost,tesla:teslaRoofTotalCost};
     return data;
 }
-
 
 const getRoofArea = function getRoofArea(length, width){
     
