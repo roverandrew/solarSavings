@@ -12,12 +12,18 @@ const getTotalRoofCostData = function getTotalRoofCostData(standardRoofCost, sol
         teslaRoofTotalCost[i] = totalCombinedRoofCost;
     }
  
-    //Generate cost data for the standard roof (constant) and the labels for the graph (x-axis units);
+    //Generate cost data for the standard roof (constant).
     var standardRoofTotalCost = new Array(51);
-    var labels = new Array(standardRoofTotalCost.length);
+    
     for(var i=0;i<standardRoofTotalCost.length;i++){
         standardRoofTotalCost[i] = standardRoofCost;
-        labels[i] = i;
+    }
+
+    //Generate labels for the graph (x-axis units) at 2 year increments.
+    var labels = new Array( ((standardRoofTotalCost.length-1)/2) + 1);
+    labels[0] = 0;
+    for(var i = 1;i<labels.length;i++){
+        labels[i] = i*2;
     }
     
     var data = {standard:standardRoofTotalCost,tesla:teslaRoofTotalCost,labels:labels};
