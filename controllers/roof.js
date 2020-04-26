@@ -2,21 +2,25 @@ const provincialElectricityCostPerkWh = {"AB":0.167,"BC":0.124,"MB":0.096,"NB":0
 
 const getTotalRoofCostData = function getTotalRoofCostData(standardRoofCost, solarPortionRoofCost, standardPortionRoofCost, annualPowerOutput,currentProvince){ 
 
-    var teslaRoofAnnualSavings = annualPowerOutput*(provincialElectricityCostPerkWh.currentProvince);
+    var teslaRoofAnnualSavings = annualPowerOutput*(provincialElectricityCostPerkWh[currentProvince]);
     var totalCombinedRoofCost = solarPortionRoofCost + standardPortionRoofCost;
     
-    var teslaRoofTotalCost = new Array(25);
+    var teslaRoofTotalCost = new Array(51);
     teslaRoofTotalCost[0] = totalCombinedRoofCost;
-    for(var i=1;i<=teslaRoofTotalCost.length;i++){
+    for(var i=1;i<teslaRoofTotalCost.length;i++){
         totalCombinedRoofCost = totalCombinedRoofCost - teslaRoofAnnualSavings;
         teslaRoofTotalCost[i] = totalCombinedRoofCost;
     }
-    var standardRoofTotalCost = new Array(25);
-    for(var i=1;i<=standardRoofTotalCost.length;i++){
+ 
+    //Generate cost data for the standard roof (constant) and the labels for the graph (x-axis units);
+    var standardRoofTotalCost = new Array(51);
+    var labels = new Array(standardRoofTotalCost.length);
+    for(var i=0;i<standardRoofTotalCost.length;i++){
         standardRoofTotalCost[i] = standardRoofCost;
+        labels[i] = i;
     }
     
-    var data = {standard:standardRoofTotalCost,tesla:teslaRoofTotalCost};
+    var data = {standard:standardRoofTotalCost,tesla:teslaRoofTotalCost,labels:labels};
     return data; //All data points are for the start of the year
 }
 
