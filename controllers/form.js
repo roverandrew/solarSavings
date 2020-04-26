@@ -27,7 +27,7 @@ router.post("/data", function(req,res){
     standardRoofCostPerUnit = Number(req.body.standardRoofCostPerUnit);
     var houseLength = Number(req.body.houseLength);
     var houseWidth = Number(req.body.houseWidth);
-    percentageSolar = (Number(req.body.percentageSolar))/100;
+    percentageSolar = (Number(req.body.percentageSolar))/100
     
     //Calculate the estimated roof area based on the dimensions of the home.
     roofArea = Roof.getRoofArea(houseLength,houseWidth);
