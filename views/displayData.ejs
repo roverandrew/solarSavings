@@ -1,9 +1,9 @@
 <%- include("partials/header"); -%>
 
-<canvas id="line-chart" width="400" height="400"></canvas>
+<canvas id="line-chart" width="400 !important" height="400  !important;"></canvas>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script>
-    var ctx = document.getElementById('line-chart').getContext('2d');
+    var ctx  = document.getElementById('line-chart').getContext('2d');
     new Chart(document.getElementById("line-chart"), {
         type: 'line',
         data: {
@@ -26,14 +26,16 @@
                     display: true,
                     text: 'Tesla Solar Shingles vs Traditional Roof Time-Cost Data'
                 },
-            scales: {
-                yAxes: [{
-                    ticks: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    yAxes: [{
+                        ticks: {
                         beginAtZero: true
-                    }
-                }]
-            }        
-        }
+                        }
+                    }]
+                }        
+            }
     });
 </script>
 

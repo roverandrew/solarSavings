@@ -46,7 +46,7 @@ const getRoofArea = function getRoofArea(length, width){
 
 const getHouseholdAnnualPowerOutput = function getHouseholdAnnualPowerOutput(monthlyElectricityBill,currentProvince){
     console.log(provincialElectricityCostPerkWh[currentProvince]);
-    var annualOutput =  monthlyElectricityBill * 12 * ( 1/(provincialElectricityCostPerkWh[currentProvince]) );
+    var annualOutput = ( monthlyElectricityBill/(provincialElectricityCostPerkWh[currentProvince]) )*12;
     return annualOutput;
 }
 
