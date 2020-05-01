@@ -1,4 +1,5 @@
 const Roof = require("./roof");
+const unitConversion = require("./units");
 var express                = require("express");
 const fetch                = require('node-fetch');
 const router               = express.Router();
@@ -10,30 +11,51 @@ const router               = express.Router();
  * Tesla SolarRoof capacity in kW/m^2 source: https://www.theverge.com/2019/10/25/20932831/tesla-new-solar-glass-roof-elon-musk-version-three/
  */
 
+var standardRoofCostInfo = {tile:180,asphalt:100,slate:260}
+
 const teslaRoofCostPerUnit = 335;
 const teslaRoofCapacityPerUnitArea = 0.0538105;
+const module_type = 1;
+const losses = 21.6; //Can make this depend on weather
+const array_type = 1;
+const tilt = 27; //Assumed value
+const azimuth = 0;
+const NREL_api_key = 'nANSd1IKE1BAzkWI5BwrefIJDaTXhuEJd4O89gQv';
 var standardRoofCostPerUnit;
 var roofArea;
 var solarPortionRoofCost;
 var standardPortionRoofCost;
 var standardRoofCost;
 var currentProvince;
-var percentageSolar;
+var percentageSolar = 100;
+var monthlyElectricityBill;
+var annualHouseholdOutput;
 
 
 router.post("/data", function(req,res){
 
     //Storing user input.
-    standardRoofCostPerUnit = Number(req.body.standardRoofCostPerUnit);
+    var units = req.body.toggle;
+    var standardRoofType = req.body.roofType;
     var houseLength = Number(req.body.houseLength);
     var houseWidth = Number(req.body.houseWidth);
-    percentageSolar = (Number(req.body.percentageSolar))/100
+    monthlyElectricityBill = Number(req.body.monthlyElectricityBill);
+    
+    if(units == "imperial"){
+        var dimensions = unitConversion.getMetricData(houseLength,houseWidth);
+        houseLength = dimensions.length;
+        houseWidth = dimensions.width;
+    }
+
+    standardRoofCostPerUnit = standardRoofCostInfo[standardRoofType];
     
     //Calculate the estimated roof area based on the dimensions of the home.
     roofArea = Roof.getRoofArea(houseLength,houseWidth);
+    
+    //Calculate the cost of the standard roof.
     standardRoofCost = roofArea*standardRoofCostPerUnit;
 
-    //Calculate the cost of the roof.
+    //Calculate the cost of the roof with solar shingles.
     solarPortionRoofCost = percentageSolar*roofArea*teslaRoofCostPerUnit;
     standardPortionRoofCost = (1-percentageSolar)*roofArea*standardRoofCostPerUnit;
 
@@ -43,64 +65,56 @@ router.post("/data", function(req,res){
         currentProvince = json.area.code;
         const latitude = json.location.latitude
         const longitude = json.location.longitude
-        const coordinates = [longitude,latitude];
-        console.log(coordinates);
-        system.exit(1);
+        const coordinates = {longitude:longitude,latitude:latitude};
         return coordinates;
     })
     .then(coordinates =>{
-        const lon = coordinates[0];
-        const lat  = coordinates[1];
-        const module_type = 1;
-        const losses = 21.6; //Can make this depend on weather
-        const array_type = 1;
-        const tilt = 27; //Assumed value
-        const azimuth = 0;
-        const NREL_api_key = 'nANSd1IKE1BAzkWI5BwrefIJDaTXhuEJd4O89gQv';
-
-        const system_capacity = teslaRoofCapacityPerUnitArea*roofArea*percentageSolar; 
+        const lon = coordinates.longitude;
+        const lat  = coordinates.latitude;
         
-        return fetch(`https://developer.nrel.gov/api/pvwatts/v6.json?api_key=${NREL_api_key}&lat=${lat}&lon=${lon}&system_capacity=${system_capacity}&azimuth=${azimuth}&tilt=${tilt}&array_type=${array_type}&module_type=${module_type}&losses=${losses}`);
+        const retryLimit = 11;
+        const retryCount = 0;
+        annualHouseholdOutput = Roof.getHouseholdAnnualPowerOutput(monthlyElectricityBill,currentProvince);
+        return fetchWithRetry(annualHouseholdOutput,lon,lat,module_type,losses,array_type,tilt,azimuth,NREL_api_key,teslaRoofCapacityPerUnitArea,roofArea,percentageSolar,retryLimit,retryCount);
     })
-    .then(res => res.json())
-    .then(powerData => {
-       
-        const annualPowerOutput = powerData.outputs.ac_annual;
+    .then(powerAndSolarPercentageData => {
+        const annualPowerOutput = powerAndSolarPercentageData.powerData.outputs.ac_annual;
+        const percentageSolar = powerAndSolarPercentageData.solarPercentageData;
         const costData = Roof.getTotalRoofCostData(standardRoofCost,solarPortionRoofCost,standardPortionRoofCost,annualPowerOutput,currentProvince);
         console.log("Cost Data:")
         console.log(costData);
+        console.log("percentage solar:")
+        console.log(percentageSolar);
         res.render("displayData",{data:costData});
     })
 });
 
-    // function fetchWithRetry(lon,lat,module_type,losses,array_type,tilt,azimuth,NREL_api_key,
-    //                         teslaRoofCapacityPerUnitArea,roofArea,percentageSolar,
-    //                          url, retryLimit, retryCount) {
+    function fetchWithRetry(annualHouseholdOutput,lon,lat,module_type,losses,array_type,tilt,azimuth,NREL_api_key,
+                            teslaRoofCapacityPerUnitArea,roofArea,percentageSolar,retryLimit,retryCount) {
 
-    //     const system_capacity = teslaRoofCapacityPerUnitArea*roofArea*percentageSolar; 
-    //     retryLimit = retryLimit || Number.MAX_VALUE; //Max amount of times the fetch request can be re-made.
+        const system_capacity = teslaRoofCapacityPerUnitArea*roofArea*percentageSolar; 
+        retryLimit = retryLimit || Number.MAX_VALUE; //Max amount of times the fetch request can be re-made.
 
-    //     return fetch(`https://developer.nrel.gov/api/pvwatts/v6.json?api_key=${NREL_api_key}&lat=${lat}&lon=${lon}&system_capacity=${system_capacity}&azimuth=${azimuth}&tilt=${tilt}&array_type=${array_type}&module_type=${module_type}&losses=${losses}`)
-    //     .then(res => res.json())
-    //     .then(powerData => {
-    //         //If the outputted power by the solar shingles is greater than what the house outputs, make the solar area smaller and fetch again.
-    //         //Else return the response.
-    //         if (powerData.outputs.ac_annual>householdOutput && retryCount < retryLimit) { 
-    //             console.log("Solar power output is greater than household power output, making solar area smaller and fetching again.");
-    //             return fetchWithRetry(lon,lat,module_type,losses,array_type,tilt,azimuth,NREL_api_key,
-    //                                   teslaRoofCapacityPerUnitArea,roofArea,percentageSolar-0.10,
-    //                                   url, retryLimit, retryCount + 1);
-    //         } else {
-    //             return powerData;
-    //         }
-    //     });
-    // }
-
-    // fetchWithRetry('someURLWithAJSONfile/file.json', 10).then(function (json) {
-    //     data = json;
-    // }).catch(function (err) {
-    //     console.log(`There was a problem with the fetch operation: ${err.message}`);
-    // });
-
+        return fetch(`https://developer.nrel.gov/api/pvwatts/v6.json?api_key=${NREL_api_key}&lat=${lat}&lon=${lon}&system_capacity=${system_capacity}&azimuth=${azimuth}&tilt=${tilt}&array_type=${array_type}&module_type=${module_type}&losses=${losses}`)
+        .then(res => res.json())
+        .then(powerData => {
+            //If the outputted power by the solar shingles is greater than what the house outputs, make the solar area smaller and fetch again.
+            //Else return the response.
+            if (powerData.outputs.ac_annual>annualHouseholdOutput) { 
+                
+                if(retryCount == retryLimit){
+                    console.log("Max number of re-tries hit, good bye");
+                    process.exit(1);
+                }
+                console.log("Solar power output is greater than household power output, making solar area smaller and fetching again.");
+                console.log("Here is the new solar percentage" + percentageSolar);
+                fetchWithRetry(annualHouseholdOutput,lon,lat,module_type,losses,array_type,tilt,azimuth,NREL_api_key,
+                                      teslaRoofCapacityPerUnitArea,roofArea,percentageSolar-0.10,
+                                      retryLimit, retryCount+1);
+            }
+            var powerAndSolarPercentageData = {powerData:powerData,solarPercentageData:percentageSolar}
+            return powerAndSolarPercentageData;     
+        });
+    }
 
 module.exports = router;

@@ -1,51 +1,65 @@
 <%- include("partials/header"); -%>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
     <a class="navbar-brand" href="#">
         <i class="fas fa-solar-panel fa-1x" href="#"></i>
         <span>Solar Savings</span><div id="subscript">(are solar shingles worth it?)</div>
     </a>
+    <form action="/data" method="POST">
+        <input id="toggle" name="toggle" value="imperial" type="checkbox" data-toggle="switchbutton" checked data-width="100" data-onlabel="Imperial" data-offlabel="Metric" data-onstyle="dark">
+    
 </nav>
 
 <div class="container">
-
     <h1 class="my-1">Time-Cost Analysis Calculator</h1>
 
-    <form action="/data" method="POST">
         <div class="form-group">
             <div class="row">
                 <div class="col-6">
-                    <label class="my-1" for="standardRoofCostPerUnit">Select a traditional roof type</label>
-                    <select class="form-control" name="standardRoofCostPerUnit" id="standardRoofCostPerUnit">
-                        <option value="100">Asphalt (cheapest)</option>
-                        <option value="180">Tile (standard)</option>
-                        <option value="260">Slate (expensive)</option>
+                    <label class="my-1" for="roofType">Select a traditional roof type</label>
+                    <select class="form-control" name="roofType" id="roofType">
+                        <option value="tile">Tile (standard)</option>
+                        <option value="slate">Slate (expensive)</option>
+                        <option value="asphalt">Asphalt (cheapest)</option>
                     </select>
                 </div>
-                <div class="col-3">
-                    <label class="my-1" for="houseLength">Enter house length in meters</label>
-                    <input type="text" class="form-control" name="houseLength" id="houseLength" placeholder="length">
+                <div class="col-6">
+                    <label class="my-1" for="monthlyElectricityBill">Enter your monthly electricity bill</label>
+                    <input type="text" class="form-control" name="monthlyElectricityBill" id="monthlyElectricityBill" required>
                 </div>
-                <div class="col-3">
-                    <label class="my-1" for="houseWidth">Enter house width in meters</label>
-                    <input type="text" class="form-control" name="houseWidth" id="houseWidth" placeholder="width">
-                </div>
+                
             </div>
 
             <div class="row">
-                <div class="col">
-                    <label class="my-1" for="percentageSolar">Enter the percentage of your roof to be covered by solar shingles</label>
-                    <div class="range-wrap">
-                        <div class="range-value" id="rangeV"></div>
-                        <input name="percentageSolar" id="percentageSolar" type="range" min="1" max="100" value="50" step="1">
-                    </div>
+                <div class="col-6">
+                    <label class="my-1" for="houseLength">Enter the length of your house</label>
+                    <input type="text" class="form-control" name="houseLength" id="houseLength" placeholder="units: feet" required>
+                </div>
+                <div class="col-6">
+                    <label class="my-1" for="houseWidth">Enter the width of your house</label>
+                    <input type="text" class="form-control" name="houseWidth" id="houseWidth" placeholder="units: feet" required>
                 </div>
             </div>
+
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
-</div>
+    <script>
+        var length = document.getElementsByName('houseLength')[0];
+        var width = document.getElementsByName('houseWidth')[0];
+        var unitsToggle = document.getElementById('toggle');
+        unitsToggle.addEventListener("change", function(){
+            if(length.placeholder == 'units: feet'){
+                length.placeholder = 'units: meters';
+                width.placeholder = 'units: meters';
+            }
+            else{
+                length.placeholder = 'units: feet';
+                width.placeholder = 'units: feet';
+            }
+        });
+    </script>
 
-<script type="text/javascript" src="/javascripts/slider.js"></script>
+</div>
 </body>
 </html>
