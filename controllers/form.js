@@ -1,8 +1,8 @@
-const Roof = require("./roof");
 const unitConversion = require("./units");
-var express                = require("express");
-const fetch                = require('node-fetch');
-const router               = express.Router();
+var express          = require("express");
+const Roof           = require("./roof");
+const fetch          = require('node-fetch');
+const router         = express.Router();
 
 /**
  * All prices in Canadian dollars and units in metric.
@@ -11,40 +11,45 @@ const router               = express.Router();
  * Tesla SolarRoof capacity in kW/m^2 source: https://www.theverge.com/2019/10/25/20932831/tesla-new-solar-glass-roof-elon-musk-version-three/
  */
 
-var standardRoofCostInfo = {tile:180,asphalt:100,slate:260}
 
+//Constants
+const standardRoofCostInfo = {tile:180,asphalt:100,slate:260};
 const teslaRoofCostPerUnit = 335;
 const teslaRoofCapacityPerUnitArea = 0.0538105;
 const module_type = 1;
-const losses = 21.6; //Can make this depend on weather
+const losses = 21.6; 
 const array_type = 1;
-const tilt = 27; //Assumed value
+const tilt = 27; 
 const azimuth = 0;
 const NREL_api_key = 'nANSd1IKE1BAzkWI5BwrefIJDaTXhuEJd4O89gQv';
+const geoApiKey = '6a4dd82597fcfab0321c961633972c01020023e2';
+
+
 var standardRoofCostPerUnit;
 var roofArea;
 var solarPortionRoofCost;
 var standardPortionRoofCost;
 var standardRoofCost;
 var currentProvince;
-var percentageSolar = 100;
+var percentageSolar = 1;
 var monthlyElectricityBill;
 var annualHouseholdOutput;
 
 
 router.post("/data", function(req,res){
 
-    //Storing user input.
+    //Store user input.
     var units = req.body.toggle;
     var standardRoofType = req.body.roofType;
     var houseLength = Number(req.body.houseLength);
     var houseWidth = Number(req.body.houseWidth);
     monthlyElectricityBill = Number(req.body.monthlyElectricityBill);
     
+    //If imperial units provided, convert them to metric.
     if(units == "imperial"){
         var dimensions = unitConversion.getMetricData(houseLength,houseWidth);
         houseLength = dimensions.length;
-        houseWidth = dimensions.width;
+        houseWidth = dimensions.width;   
     }
 
     standardRoofCostPerUnit = standardRoofCostInfo[standardRoofType];
@@ -59,7 +64,7 @@ router.post("/data", function(req,res){
     solarPortionRoofCost = percentageSolar*roofArea*teslaRoofCostPerUnit;
     standardPortionRoofCost = (1-percentageSolar)*roofArea*standardRoofCostPerUnit;
 
-    fetch('https://api.getgeoapi.com/api/v2/ip/check?api_key=6a4dd82597fcfab0321c961633972c01020023e2')
+    fetch(`https://api.getgeoapi.com/api/v2/ip/check?api_key=${geoApiKey}`)
     .then(res => res.json())
     .then(json => {
         currentProvince = json.area.code;
@@ -70,26 +75,23 @@ router.post("/data", function(req,res){
     })
     .then(coordinates =>{
         const lon = coordinates.longitude;
-        const lat  = coordinates.latitude;
-        
+        const lat  = coordinates.latitude;   
         const retryLimit = 11;
         const retryCount = 0;
         annualHouseholdOutput = Roof.getHouseholdAnnualPowerOutput(monthlyElectricityBill,currentProvince);
+        console.log("Annual household output is" + annualHouseholdOutput);
         return fetchWithRetry(annualHouseholdOutput,lon,lat,module_type,losses,array_type,tilt,azimuth,NREL_api_key,teslaRoofCapacityPerUnitArea,roofArea,percentageSolar,retryLimit,retryCount);
     })
     .then(powerAndSolarPercentageData => {
         const annualPowerOutput = powerAndSolarPercentageData.powerData.outputs.ac_annual;
         const percentageSolar = powerAndSolarPercentageData.solarPercentageData;
+        console.log("SOLAR PERCENTAGE OUTSIDE" + percentageSolar);
         const costData = Roof.getTotalRoofCostData(standardRoofCost,solarPortionRoofCost,standardPortionRoofCost,annualPowerOutput,currentProvince);
-        console.log("Cost Data:")
-        console.log(costData);
-        console.log("percentage solar:")
-        console.log(percentageSolar);
         res.render("displayData",{data:costData});
     })
 });
 
-    function fetchWithRetry(annualHouseholdOutput,lon,lat,module_type,losses,array_type,tilt,azimuth,NREL_api_key,
+    async function fetchWithRetry(annualHouseholdOutput,lon,lat,module_type,losses,array_type,tilt,azimuth,NREL_api_key,
                             teslaRoofCapacityPerUnitArea,roofArea,percentageSolar,retryLimit,retryCount) {
 
         const system_capacity = teslaRoofCapacityPerUnitArea*roofArea*percentageSolar; 
