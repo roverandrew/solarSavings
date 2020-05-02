@@ -1,4 +1,4 @@
 /node_modules
 npm-debug.log
-myconfig.js
+.DS_Store
 /*.env
