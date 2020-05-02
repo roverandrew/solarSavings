@@ -1,9 +1,10 @@
 const fetchExternalAPI = require("./fetchExternal");
-const unitConversion = require("./units");
-var express          = require("express");
-const Roof           = require("./roof");
-const fetch          = require('node-fetch');
-const router         = express.Router();
+const getKeys          = require("./myconfig");
+const unitConversion   = require("./units");
+var express            = require("express");
+const Roof             = require("./roof");
+const fetch            = require('node-fetch');
+const router           = express.Router();
 
 /**
  * All prices in Canadian dollars and units in metric.
@@ -22,8 +23,8 @@ const losses = 21.6;
 const array_type = 1;
 const tilt = 27; 
 const azimuth = 0;
-const NREL_api_key = 'nANSd1IKE1BAzkWI5BwrefIJDaTXhuEJd4O89gQv';
-const geoApiKey = '6a4dd82597fcfab0321c961633972c01020023e2';
+const NREL_api_key = getKeys.getNRELApiKey();
+const geoApiKey = getKeys.getGeoApiKey();
 
 
 var lon;
