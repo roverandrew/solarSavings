@@ -27,7 +27,35 @@ button.btn{
     float:right;
 }
 
-canvas{
-    width:400px !important;
-    height:400px !important;
-  }
+.container{
+    width:75%;
+    margin: 0 auto;
+}
+br{
+    margin-top:100px;
+}
+.container > .line > p{
+    display:inline;
+    margin-top: 10px;
+}
+
+.container > .line > h3{
+    margin-top: 10px;
+    display:inline;
+}
+.container > .line > button{
+    display:inline;
+    float:right;
+}
+
+.line{
+    margin-top: 0;
+    margin-bottom:.7em;
+}
+#canvas{
+    margin-top:.25rem;
+    margin-bottom:3%;
+}
+p{
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+}

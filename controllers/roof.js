@@ -20,13 +20,14 @@ const getTotalRoofCostData = function getTotalRoofCostData(standardRoofCost, sol
     }
 
     //Generate labels for the graph (x-axis units) at 2 year increments.
-    var labels = new Array( ((standardRoofTotalCost.length-1)/2) + 1);
-    labels[0] = 0;
-    for(var i = 1;i<labels.length;i++){
-        labels[i] = i*2;
+    var labels = new Array((51));
+    for(var i = 0;i<labels.length;i++){
+        labels[i] = i;
     }
-    
-    var data = {standard:standardRoofTotalCost,tesla:teslaRoofTotalCost,labels:labels};
+
+    var solarSavingsEnd = standardRoofTotalCost[standardRoofTotalCost.length-1] - teslaRoofTotalCost[teslaRoofTotalCost.length-1];
+    var solarSavingsHalfway = standardRoofTotalCost[(standardRoofTotalCost.length-1)/2] - teslaRoofTotalCost[(teslaRoofTotalCost.length-1)/2];
+    var data = {standard:standardRoofTotalCost,tesla:teslaRoofTotalCost,labels:labels,solarSavingsEnd:solarSavingsEnd,solarSavingsHalfway:solarSavingsHalfway};
     return data; //All data points are for the start of the year
 }
 

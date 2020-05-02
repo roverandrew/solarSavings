@@ -1,42 +1,109 @@
-<%- include("partials/header"); -%>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Solar Savings</title>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/css/bootstrap-switch-button.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap-switch-button@1.1.0/dist/bootstrap-switch-button.min.js"></script>
+  </head>
+<body onload="load()">
 
-<canvas id="line-chart" width="400 !important" height="400  !important;"></canvas>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
+    <a class="navbar-brand" href="/">
+        <i class="fas fa-solar-panel fa-1x" href="#"></i>
+        <span>Solar Savings</span><div id="subscript">(are solar shingles worth it?)</div>
+    </a>    
+</nav>
+
+<div class="container"><div class="chartjs-size-monitor"><div class="chartjs-size-monitor-expand"><div class=""></div></div><div class="chartjs-size-monitor-shrink"><div class=""></div></div></div>
+		<canvas id="canvas" style="display: block; height: 534px; width: 1068px;" width="2136" height="1068" class="chartjs-render-monitor"></canvas>
+</div>
 <script>
-    var ctx  = document.getElementById('line-chart').getContext('2d');
-    new Chart(document.getElementById("line-chart"), {
-        type: 'line',
-        data: {
-            labels: <%=JSON.stringify(data.labels)%>,
-            datasets: [{ 
-                data: <%=JSON.stringify(data.standard)%>,
-                label: "Standard Roof Cost",
-                borderColor: "#3e95cd",
-                fill: false
-            }, { 
-                data: <%=JSON.stringify(data.tesla)%>,
-                label: "Tesla Solar Cost",
-                borderColor: "#8e5ea2",
-                fill: false
-            }
-            ]
-        },
-            options: {
-                title: {
-                    display: true,
-                    text: 'Tesla Solar Shingles vs Traditional Roof Time-Cost Data'
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                        beginAtZero: true
-                        }
-                    }]
-                }        
-            }
-    });
+    function load() {
+        var ctx  = document.getElementById('canvas').getContext('2d');
+        new Chart(document.getElementById("canvas"), {
+            type: 'line',
+            data: {
+                labels: <%=JSON.stringify(data.costData.labels)%>,
+                datasets: [{ 
+                    data: <%=JSON.stringify(data.costData.standard)%>,
+                    label: "Standard Roof Cost",
+                    borderColor: "#3e95cd",
+                    fill: false
+                }, { 
+                    data: <%=JSON.stringify(data.costData.tesla)%>,
+                    label: "Tesla Solar Cost",
+                    borderColor: "#8e5ea2",
+                    fill: false
+                }
+                ]
+            },
+                options: {
+                    title: {
+                        display: true,
+                        text: 'Tesla Solar Shingles vs Traditional Roof Time-Cost Data',
+                        fontSize: 30,
+                        fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'"
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                            beginAtZero: true,
+                            fontFamily: "'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'",
+                            }
+                        }],
+                        xAxes: [{
+                            ticks: {
+                                maxTicksLimit: 11
+                            }
+                        }]
+                    }
+                }       
+        });
+    }
 </script>
+
+<div class="container">
+    <div class="line">
+        <h3>Current location:</h3>
+        <p>(<%=data.lat%>,<%=data.lon%>), <%=data.currentRegion%>, <%=data.currentProvince%> </p>
+    </div>
+    
+    <div class="line">
+        <p>It is estimated</p>
+        <h3><%=data.percentageSolarArea%>%</h3>                                          
+        <p>of your roof should be made of solar shingles for maximum cost efficiency.</p>
+    </div>
+    <div class="line">
+        <% if(data.solarSavingsHalfway>0){ %>
+            <p>After 25 years, you will save </p>
+            <h3>$<%=data.solarSavingsHalfway%></h3>
+            <p>from your solar roof.</p>
+        <% }else{ %>
+            <p>After 25 years, your solar roof will cost you an extra </p>
+            <h3>$<%=data.solarSavingsHalfway*-1%></h3>
+            <p>over a traditional roof</p>
+        <%} %>
+    </div>
+    <div class="line">
+        <% if(data.solarSavingsEnd>0){ %>
+            <p>After 50 years, you will save </p>
+            <h3>$<%=data.solarSavingsEnd%></h3>
+            <p>from your solar roof.</p>
+        <% }else{ %>
+            <p>After 50 years, your solar roof will cost you an extra </p>
+            <h3>$<%=data.solarSavingsEnd*-1%></h3>
+            <p>over a traditional roof</p>
+        <%} %>
+    </div>
+</div>
 
 <%- include("partials/footer"); -%>

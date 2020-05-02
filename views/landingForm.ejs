@@ -11,14 +11,13 @@
 
 <div class="container">
     <h1 class="my-1">Time-Cost Analysis Calculator</h1>
-
         <div class="form-group">
             <div class="row">
                 <div class="col-6">
-                    <label class="my-1" for="roofType">Select a traditional roof type</label>
+                    <label class="my-1" for="roofType">Select a traditional roof type to be compared</label>
                     <select class="form-control" name="roofType" id="roofType">
-                        <option value="tile">Tile (standard)</option>
                         <option value="slate">Slate (expensive)</option>
+                        <option value="tile">Tile (standard)</option>
                         <option value="asphalt">Asphalt (cheapest)</option>
                     </select>
                 </div>
@@ -44,21 +43,7 @@
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
-    <script>
-        var length = document.getElementsByName('houseLength')[0];
-        var width = document.getElementsByName('houseWidth')[0];
-        var unitsToggle = document.getElementById('toggle');
-        unitsToggle.addEventListener("change", function(){
-            if(length.placeholder == 'units: feet'){
-                length.placeholder = 'units: meters';
-                width.placeholder = 'units: meters';
-            }
-            else{
-                length.placeholder = 'units: feet';
-                width.placeholder = 'units: feet';
-            }
-        });
-    </script>
+    <script src="/javascripts/toggle.js"></script>
 
 </div>
 </body>
