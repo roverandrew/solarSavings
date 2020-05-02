@@ -1,5 +1,5 @@
 const fetchExternalAPI = require("./fetchExternal");
-const getKeys          = require("./myconfig");
+const getKeys          = require("../myconfig");
 const unitConversion   = require("./units");
 var express            = require("express");
 const Roof             = require("./roof");
