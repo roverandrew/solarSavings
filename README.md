@@ -20,13 +20,9 @@
   - [Roof Type](#roof-type)
   - [Monthly Electricity Bill](#monthly-electricity-bill)
   - [House Dimensions](#house-dimensions)
-- [Features](#features)
-- [Feedback](#feedback)
-- [Contributors](#contributors)
-- [Build Process](#build-process)
-- [Backers](#backers-)
-- [Sponsors](#sponsors-)
-- [Acknowledgments](#acknowledgments)
+- [Calculating Capacity](#Calculating Capacity)
+  - [NREL Solar API](#NREL-solar-api)
+  - [Converting kilowatt-hours of usage into kilowatts of solar panels](#kWh-to-kW)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -53,3 +49,21 @@ The roof area is calculated with the following assumptions.
 - The roof has 27 degrees of tilt. The correction factor is a result of this tilt.<br>
 <p>Formula: roofArea = (length) x (width+eavesLength) x (correctionFactor=1.118)</p>
 
+## Calculating Capacity
+
+### NREL Solar API
+
+The National Renewable Energy Laboratory's (NREL) PVWatts API is used to calculate the solar array's performance.
+It takes the following inputs:
+- A system size of 1, setting up the calculation based on production per 1000 watts of solar panels.
+- Module type: Premium (Assumption based on the assumed quality of Tesla's solar shingles.
+- Array type: Fixed (roof mounted). 
+- Tilt: 27 degrees (Assumption. It is estimated to be the most common roof tilt angle, on average)
+- Azimuth: The azimuth is the angle between the north vector and the sun's vector on the horizontal plane. As a result, different side's of the house have different azimuth's. Since a Tesla Solar Roof is assumed to be evenly distributed across a roof, an azimuth of 0 degrees is used. 0 degrees of azimuth is indicative of a roof that is completely flat. This is supposed to represent the differing azimuth's of each roof side cancelling eachother out. This is by far the biggest assumption.
+- Array type: Fixed (roof mounted). 
+- Latitude and longitude.
+
+The return value from the API represents the estimated production of 1000 watts of solar panels at the inputted latitude and longitude.
+
+### Converting kilowatt-hours of usage into kilowatts of solar panels
+The estimated kWh output for a given user is divided by the PVWatts production estimate for 1kW of solar panels in a user's area. The result is the kW capacity required for the user's home.
