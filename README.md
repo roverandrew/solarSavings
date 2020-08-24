@@ -29,4 +29,13 @@
 
 ## Inputs
 
+<h3>Roof Type</h3>
+
+These are the different types of "normal" roofs, that the solar panel roof will be compared to.
+- The "slate" roof choice represents a roof that costs $242CAD/m^2.<br>
+- The "tile" roof choice represents a roof that costs $169CAD/m^2.<br>
+- The "asphalt" roof choice represents a roof that costs $93CAD/m^2.<br>
+    
+    Average roofing costs were derived from data available on Home Advisor and Homewyse. In each case, there is a wide range of roofing costs, for each roof type     it's respective midpoint cost is used. Ranges for roof tile types from Home Advisor were derived using information from roofing contractors that included all     equivalent components of a Solar Roof (such as installation labor, materials, existing roof tear-off, and underlayment).
+
 
