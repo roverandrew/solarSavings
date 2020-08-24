@@ -46,3 +46,10 @@ These are the different types of "normal" roofs, that the solar panel roof will 
 <p>Used in combination with the kWh cost of electricity in the user's respective province to calculate the annual kWh energy output of a household.</p>
 <p>Formula: kWh Electricity Consumed = ( Monthly Electricity Bill / kWh Electricity Cost ) x 12</p>
 
+### House Dimensions
+
+The roof area is calculated with the following assumptions.
+- The roof has an eaves length (overhang) of 0.5m<br>
+- The roof has 27 degrees of tilt. The correction factor is a result of this tilt.<br>
+<p>Formula: roofArea = (length) x (width+eavesLength) x (correctionFactor=1.118)</p>
+
