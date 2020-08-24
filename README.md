@@ -17,6 +17,9 @@
 ## How it Works
 
 - [Inputs](#inputs)
+  - [Roof Type](#roof-type)
+  - [Monthly Electricity Bill](#monthly-electricity-bill)
+  - [House Dimensions](#house-dimensions)
 - [Features](#features)
 - [Feedback](#feedback)
 - [Contributors](#contributors)
@@ -29,7 +32,7 @@
 
 ## Inputs
 
-<h3>Roof Type</h3>
+### Roof Type
 
 These are the different types of "normal" roofs, that the solar panel roof will be compared to.
 - The "slate" roof choice represents a roof that costs $242CAD/m^2.<br>
@@ -38,7 +41,7 @@ These are the different types of "normal" roofs, that the solar panel roof will 
     
     Average roofing costs were derived from data available on Home Advisor and Homewyse. In each case, there is a wide range of roofing costs, for each roof type     it's respective midpoint cost is used. Ranges for roof tile types from Home Advisor were derived using information from roofing contractors that included all     equivalent components of a Solar Roof (such as installation labor, materials, existing roof tear-off, and underlayment).
     
-<h3>Monthly Electricity Bill</h3>
+### Monthly Electricity Bill
 
 <p>Used in combination with the kWh cost of electricity in the user's respective province to calculate the annual kWh energy output of a household.</p>
 <p>Formula: kWh Electricity Consumed = ( Monthly Electricity Bill / kWh Electricity Cost ) x 12</p>
