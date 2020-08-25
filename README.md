@@ -16,21 +16,39 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## How it Works
 
-- [Inputs](#inputs)
-  - [Roof Type](#roof-type)
-  - [Monthly Electricity Bill](#monthly-electricity-bill)
-  - [House Dimensions](#house-dimensions)
-- [Capacity](#Capacity)
-  - [NREL Solar API](#NREL-solar-api)
-  - [Converting kilowatt-hours of usage into kilowatts of solar panels](#kWh-to-kW)
+- [Monthly Electricity Bill](#monthly-electricity-bill)
+
+- [Calculating Standard Roof Cost](#Calculating Standard Roof Cost)
+  - [Standard Roof Type](#Standard Roof Type)
+  - [Roof Area](#Roof Area)
+- [Calculating Solar Roof Cost](#Calculating Standard Roof Cost)
+  - [Upfront Cost](#Upfront Cost)
+    - [Monthly Electricity Bill](#Monthly Electricity Bill)
+    - [Calculating Capacity](#Calculating Capacity)
+  - [Yearly Savings](#Yearly Savings)
+  
 - [Solar Cost](#Solar Cost)
 - [Solar Roof Area](#Solar Roof Area)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-## Inputs
+    
+## Calculating Standard Roof Cost
 
-### Roof Type
+The cost of a standard roof is calculated according to the following formula: <br>
+Cost of standard roof = (cost of standard roof type per m^2) x (roof area)
+Further information on determining the cost of a standard roof type and the roof area can be found below.
+
+### Standard Roof Type
+Roofs can be made from different materials and with differing materials comes different costs. To account for this the cost of a solar shingle roof can be compared to that of different traditional roof types.<br>
+These are the different types of "normal" roofs, that the solar panel roof will be compared to.<br>
+
+### Roof Area
+
+The roof area is calculated with the following assumptions.
+- The roof has an eaves length (overhang) of 0.5m<br>
+- The roof has 27 degrees of tilt. The correction factor is a result of this tilt.<br>
+<p>Formula: roofArea = (length) x (width+eavesLength) x (correctionFactor=1.118)</p>
 
 These are the different types of "normal" roofs, that the solar panel roof will be compared to.
 - The "slate" roof choice represents a roof that costs $242CAD/m^2.<br>
@@ -39,23 +57,20 @@ These are the different types of "normal" roofs, that the solar panel roof will 
     
     Average roofing costs were derived from data available on Home Advisor and Homewyse. In each case, there is a wide range of roofing costs, for each roof type     it's respective midpoint cost is used. Ranges for roof tile types from Home Advisor were derived using information from roofing contractors that included all     equivalent components of a Solar Roof (such as installation labor, materials, existing roof tear-off, and underlayment).
     
-### Monthly Electricity Bill
+## Calculating Solar Roof Cost
 
-<p>Used in combination with the kWh cost of electricity in the user's respective province to calculate the annual kWh energy output of a household.</p>
-<p>Formula: Annual kWh Electricity Consumed = ( Monthly Electricity Bill / kWh Electricity Cost ) x 12</p>
+### Upfront Cost
+The upfront cost is calculated by multiplying the required system kW capacity by Tesla's claimed cost per kW of $2640CAD.<br>
+The required kW capacity is calculated with the help of The National Renewable Energy Laboratory's (NREL) PVWatts API, and the user's annual kWh household output.
+https://www.ecohome.net/guides/3502/tesla-solar-roof-cost-competitors-review/#:~:text=Install%20price%3A%20SunTegra%20doesn't,Product%20warranty%3A%2010%20years
 
-### House Dimensions
+#### Monthly Electricity Bill
 
-The roof area is calculated with the following assumptions.
-- The roof has an eaves length (overhang) of 0.5m<br>
-- The roof has 27 degrees of tilt. The correction factor is a result of this tilt.<br>
-<p>Formula: roofArea = (length) x (width+eavesLength) x (correctionFactor=1.118)</p>
+Used in combination with the kWh cost of electricity in the user's respective province to calculate the annual kWh energy output of a household.<br>
+Formula: <br>
+Annual kWh Electricity Consumed = ( Monthly Electricity Bill / kWh Electricity Cost ) x 12
 
-## Calculating Capacity
-
-### NREL Solar API
-
-The National Renewable Energy Laboratory's (NREL) PVWatts API is used to calculate the solar array's performance.
+#### Calculating Capacity
 It takes the following inputs:
 - A system capacity (kW) of that is initially set to be 1000th of a house's estimated power output (kWh). This is initially set to an unrealistically high value.
 - Module type: Premium (Assumption based on the assumed quality of Tesla's solar shingles.
@@ -65,23 +80,8 @@ It takes the following inputs:
 - Array type: Fixed (roof mounted). 
 - Latitude and longitude.
 
-The return value from the API represents the estimated production kWh production of certain kW sized solar system. The value is is recursively called, continually decreasing the inputted kW capacity of the system, until the kWh output of the solar system, is less than that the actual kWh output of a user's house. This way, it can be insured that all solar energy produced is being used by the user's house.
+The return value from the API represents the estimated production kWh production of certain kW sized solar system. The calling function is recursively called, continually decreasing the inputted kW capacity of the system, until the resulting kWh output of the solar system, is less than that the actual kWh output of a user's house. This way, it can be insured that all solar energy produced is being used by the user's house. Once this occurs, the related kW capacity is the kW capacity of the user's house.
 
-
-
-## Solar Cost
-The cost of a Tesla Solar Shingle roof is calculated according to the following formula:
-Total Capacity (in kW) x $2640CAD/kW = Total Cost
-https://www.ecohome.net/guides/3502/tesla-solar-roof-cost-competitors-review/#:~:text=Install%20price%3A%20SunTegra%20doesn't,Product%20warranty%3A%2010%20years.
-
-## Solar Roof Area
-The solar roof area is calculated according to the following formula:
-Size of the system (in kW) ÷ Size of the solar panel (in kW) = number of panels required.
-solar roof area = number of panels required x area of each panel.
-Assumptions:
-- The individual Tesla Solar Shingle capacity is 24Watts = 0.024kW
-- The size of each shingle is 1140mm x 430mm = 1.14m x 0.43m
-- Source: https://pv-magazine-usa.com/2020/02/10/whats-the-efficiency-of-a-tesla-glass-tile-solar-roof/
-
-
-
+### Yearly Savings
+The yearly savings is calculated by multiplying the solar roof annual kWh output by the user's province's cost of electricity per kWh.<br>
+This is continually subtracted from the upfront cost of the solar roof, showing the cost over time.
