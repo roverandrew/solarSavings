@@ -16,12 +16,10 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 ## How it Works
 
-- [Monthly Electricity Bill](#monthly-electricity-bill)
-
-- [Calculating Standard Roof Cost](#Calculating Standard Roof Cost)
+- [Calculating Standard Roof Cost](#Calculating-Standard-Roof-Cost)
   - [Standard Roof Type](#Standard Roof Type)
   - [Roof Area](#Roof Area)
-- [Calculating Solar Roof Cost](#Calculating Standard Roof Cost)
+- [Calculating Solar Roof Cost](#Calculating-Solar-Roof-Cost)
   - [Upfront Cost](#Upfront Cost)
     - [Monthly Electricity Bill](#Monthly Electricity Bill)
     - [Calculating Capacity](#Calculating Capacity)
