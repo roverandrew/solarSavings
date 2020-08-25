@@ -24,10 +24,6 @@
     - [Monthly Electricity Bill](#Monthly-Electricity-Bill)
     - [Calculating Capacity](#Calculating-Capacity)
   - [Yearly Savings](#Yearly-Savings)
-  
-- [Solar Cost](#Solar-Cost)
-- [Solar Roof Area](#Solar-Roof-Area)
-
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
     
