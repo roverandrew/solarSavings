@@ -17,16 +17,16 @@
 ## How it Works
 
 - [Calculating Standard Roof Cost](#Calculating-Standard-Roof-Cost)
-  - [Standard Roof Type](#Standard Roof Type)
-  - [Roof Area](#Roof Area)
+  - [Standard Roof Type](#Standard-Roof-Type)
+  - [Roof Area](#Roof-Area)
 - [Calculating Solar Roof Cost](#Calculating-Solar-Roof-Cost)
   - [Upfront Cost](#Upfront Cost)
-    - [Monthly Electricity Bill](#Monthly Electricity Bill)
-    - [Calculating Capacity](#Calculating Capacity)
-  - [Yearly Savings](#Yearly Savings)
+    - [Monthly Electricity Bill](#Monthly-Electricity-Bill)
+    - [Calculating Capacity](#Calculating-Capacity)
+  - [Yearly Savings](#Yearly-Savings)
   
-- [Solar Cost](#Solar Cost)
-- [Solar Roof Area](#Solar Roof Area)
+- [Solar Cost](#Solar-Cost)
+- [Solar Roof Area](#Solar-Roof-Area)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
