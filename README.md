@@ -20,9 +20,11 @@
   - [Roof Type](#roof-type)
   - [Monthly Electricity Bill](#monthly-electricity-bill)
   - [House Dimensions](#house-dimensions)
-- [Calculating Capacity](#Calculating Capacity)
+- [Capacity](#Capacity)
   - [NREL Solar API](#NREL-solar-api)
   - [Converting kilowatt-hours of usage into kilowatts of solar panels](#kWh-to-kW)
+- [Solar Cost](#Solar Cost)
+- [Solar Roof Area](#Solar Roof Area)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -40,7 +42,7 @@ These are the different types of "normal" roofs, that the solar panel roof will 
 ### Monthly Electricity Bill
 
 <p>Used in combination with the kWh cost of electricity in the user's respective province to calculate the annual kWh energy output of a household.</p>
-<p>Formula: kWh Electricity Consumed = ( Monthly Electricity Bill / kWh Electricity Cost ) x 12</p>
+<p>Formula: Annual kWh Electricity Consumed = ( Monthly Electricity Bill / kWh Electricity Cost ) x 12</p>
 
 ### House Dimensions
 
@@ -55,7 +57,7 @@ The roof area is calculated with the following assumptions.
 
 The National Renewable Energy Laboratory's (NREL) PVWatts API is used to calculate the solar array's performance.
 It takes the following inputs:
-- A system size of 1, setting up the calculation based on production per 1000 watts of solar panels.
+- A system capacity (kW) of that is initially set to be 1000th of a house's estimated power output (kWh). This is initially set to an unrealistically high value.
 - Module type: Premium (Assumption based on the assumed quality of Tesla's solar shingles.
 - Array type: Fixed (roof mounted). 
 - Tilt: 27 degrees (Assumption. It is estimated to be the most common roof tilt angle, on average)
@@ -63,7 +65,23 @@ It takes the following inputs:
 - Array type: Fixed (roof mounted). 
 - Latitude and longitude.
 
-The return value from the API represents the estimated production of 1000 watts of solar panels at the inputted latitude and longitude.
+The return value from the API represents the estimated production kWh production of certain kW sized solar system. The value is is recursively called, continually decreasing the inputted kW capacity of the system, until the kWh output of the solar system, is less than that the actual kWh output of a user's house. This way, it can be insured that all solar energy produced is being used by the user's house.
 
-### Converting kilowatt-hours of usage into kilowatts of solar panels
-The estimated kWh output for a given user is divided by the PVWatts production estimate for 1kW of solar panels in a user's area. The result is the kW capacity required for the user's home.
+
+
+## Solar Cost
+The cost of a Tesla Solar Shingle roof is calculated according to the following formula:
+Total Capacity (in kW) x $2640CAD/kW = Total Cost
+https://www.ecohome.net/guides/3502/tesla-solar-roof-cost-competitors-review/#:~:text=Install%20price%3A%20SunTegra%20doesn't,Product%20warranty%3A%2010%20years.
+
+## Solar Roof Area
+The solar roof area is calculated according to the following formula:
+Size of the system (in kW) ÷ Size of the solar panel (in kW) = number of panels required.
+solar roof area = number of panels required x area of each panel.
+Assumptions:
+- The individual Tesla Solar Shingle capacity is 24Watts = 0.024kW
+- The size of each shingle is 1140mm x 430mm = 1.14m x 0.43m
+- Source: https://pv-magazine-usa.com/2020/02/10/whats-the-efficiency-of-a-tesla-glass-tile-solar-roof/
+
+
+
