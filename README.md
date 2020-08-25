@@ -20,7 +20,7 @@
   - [Standard Roof Type](#Standard-Roof-Type)
   - [Roof Area](#Roof-Area)
 - [Calculating Solar Roof Cost](#Calculating-Solar-Roof-Cost)
-  - [Upfront Cost](#Upfront Cost)
+  - [Upfront Cost](#Upfront-Cost)
     - [Monthly Electricity Bill](#Monthly-Electricity-Bill)
     - [Calculating Capacity](#Calculating-Capacity)
   - [Yearly Savings](#Yearly-Savings)
