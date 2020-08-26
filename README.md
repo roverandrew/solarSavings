@@ -33,6 +33,13 @@ The cost of a standard roof is calculated according to the following formula: <b
 Cost of standard roof = (cost of standard roof type per m^2) x (roof area)
 Further information on determining the cost of a standard roof type and the roof area can be found below.
 
+These are the different types of "normal" roofs, that the solar panel roof will be compared to.
+- The "slate" roof choice represents a roof that costs $242CAD/m^2.<br>
+- The "tile" roof choice represents a roof that costs $169CAD/m^2.<br>
+- The "asphalt" roof choice represents a roof that costs $93CAD/m^2.<br>
+    
+    Average roofing costs were derived from data available on Home Advisor and Homewyse. In each case, there is a wide range of roofing costs, for each roof type     it's respective midpoint cost is used. Ranges for roof tile types from Home Advisor were derived using information from roofing contractors that included all     equivalent components of a Solar Roof (such as installation labor, materials, existing roof tear-off, and underlayment).
+
 ### Standard Roof Type
 Roofs can be made from different materials and with differing materials comes different costs. To account for this the cost of a solar shingle roof can be compared to that of different traditional roof types.<br>
 These are the different types of "normal" roofs, that the solar panel roof will be compared to.<br>
@@ -43,13 +50,6 @@ The roof area is calculated with the following assumptions.
 - The roof has an eaves length (overhang) of 0.5m<br>
 - The roof has 27 degrees of tilt. The correction factor is a result of this tilt.<br>
 <p>Formula: roofArea = (length) x (width+eavesLength) x (correctionFactor=1.118)</p>
-
-These are the different types of "normal" roofs, that the solar panel roof will be compared to.
-- The "slate" roof choice represents a roof that costs $242CAD/m^2.<br>
-- The "tile" roof choice represents a roof that costs $169CAD/m^2.<br>
-- The "asphalt" roof choice represents a roof that costs $93CAD/m^2.<br>
-    
-    Average roofing costs were derived from data available on Home Advisor and Homewyse. In each case, there is a wide range of roofing costs, for each roof type     it's respective midpoint cost is used. Ranges for roof tile types from Home Advisor were derived using information from roofing contractors that included all     equivalent components of a Solar Roof (such as installation labor, materials, existing roof tear-off, and underlayment).
     
 ## Calculating Solar Roof Cost
 
