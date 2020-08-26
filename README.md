@@ -65,7 +65,7 @@ Formula: <br>
 Annual kWh Electricity Consumed = ( Monthly Electricity Bill / kWh Electricity Cost ) x 12
 
 #### Calculating Capacity
-It takes the following inputs:
+The NREL Solar API takes the following inputs:
 - A system capacity (kW) of that is initially set to be 1000th of a house's estimated power output (kWh). This is initially set to an unrealistically high value.
 - Module type: Premium (Assumption based on the assumed quality of Tesla's solar shingles.
 - Array type: Fixed (roof mounted). 
